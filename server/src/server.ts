@@ -1,33 +1,34 @@
-import express, { Express, Request, Response } from "express";
-import cors from "cors";
-import mongoose from "mongoose";
-import dotenv from "dotenv";
+import express, { Request, Response } from "express";
+import connectDB from "./utils/mongoose";
+import bodyParser from "body-parser";
+import moivesRouter from "./routes/moives";
+import authRouter from "./routes/auth";
+import usersRouter from "./routes/users";
+import { authenticationMiddleware } from "./middlewares/authMiddleware";
+import "dotenv/config";
 
-dotenv.config();
+var cors = require("cors");
+const app = express();
 
-const app: Express = express();
+connectDB();
 
 app.use(cors());
-app.use(express.json());
-app.use(express.urlencoded({ extended: true }));
+app.use(bodyParser.json());
+app.use(bodyParser.urlencoded({ extended: true }));
 
-const uri = process.env.MONGODB_URI || "";
+app.use("/auth", authRouter);
+app.use("/movies", authenticationMiddleware, moivesRouter);
+app.use("/users", authenticationMiddleware, usersRouter);
 
-(async () => {
-  try {
-    await mongoose.connect(uri);
-    console.log("Connected to the database");
-  } catch (error) {
-    console.error(error);
-  }
-})();
-
-app.get("/health", (_req: Request, res: Response) => {
-  res.status(200).send("Server is running");
+app.use((_req: Request, res: Response) => {
+  res.status(404).json({ message: "Not found" });
 });
 
-const PORT: string | number = process.env.PORT || 3000;
+app.use((err: Error, _req: Request, res: Response, _next: Function) => {
+  console.error(err);
+  res.status(500).json({ message: err.message });
+});
 
-app.listen(PORT, () => {
-  console.log(`Server is running on PORT: ${PORT}`);
+app.listen(3000, () => {
+  console.log("Server is running on port 3000");
 });
