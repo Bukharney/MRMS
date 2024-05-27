@@ -1,7 +1,7 @@
 import express, { Request, Response } from "express";
 import connectDB from "./utils/mongoose";
 import bodyParser from "body-parser";
-import moivesRouter from "./routes/moives";
+import moviesRouter from "./routes/movies";
 import authRouter from "./routes/auth";
 import usersRouter from "./routes/users";
 import { authenticationMiddleware } from "./middlewares/authMiddleware";
@@ -17,7 +17,7 @@ app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 
 app.use("/auth", authRouter);
-app.use("/movies", authenticationMiddleware, moivesRouter);
+app.use("/movies", authenticationMiddleware, moviesRouter);
 app.use("/users", authenticationMiddleware, usersRouter);
 
 app.use((_req: Request, res: Response) => {

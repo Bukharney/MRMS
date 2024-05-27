@@ -1,5 +1,5 @@
 import { Request, Response, NextFunction } from "express";
-import moviesService from "../services/moives";
+import moviesService from "../services/movies";
 import authService from "../services/auth";
 import utils from "../utils/utils";
 import { Roles } from "../models/users";

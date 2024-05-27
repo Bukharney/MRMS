@@ -9,9 +9,13 @@ function jwtAuthentication(user: any) {
   }
 
   const secretKey: Secret = key;
-  const token = jwt.sign({ userId: user._id }, secretKey, {
-    expiresIn: "1h",
-  });
+  const token = jwt.sign(
+    { userId: user._id, role: user.role, username: user.username },
+    secretKey,
+    {
+      expiresIn: "1h",
+    }
+  );
 
   return token;
 }

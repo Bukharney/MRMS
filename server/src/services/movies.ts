@@ -2,7 +2,7 @@
 import Movies, { Movie } from "../models/movies";
 
 async function getAll() {
-  return Movies.find();
+  return Movies.find().sort({ createdAt: -1 });
 }
 
 async function get(id: string) {
@@ -32,7 +32,8 @@ async function update(id: string, data: Movie) {
 
 async function remove(id: string) {
   try {
-    Movies.findByIdAndDelete(id);
+    const result = await Movies.findByIdAndDelete(id);
+    console.log(result);
   } catch (err) {
     return err;
   }

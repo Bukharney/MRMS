@@ -9,8 +9,14 @@ import {
 } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
+import { useStore } from "@/models/RootStore";
+import { observer } from "mobx-react-lite";
+import { useNavigate } from "react-router-dom";
 
-export default function Login() {
+export const Login = observer(() => {
+  const rootStore = useStore();
+  const nevigate = useNavigate();
+
   return (
     <div className="flex items-center justify-center h-screen">
       <Card className="w-[350px]">
@@ -25,19 +31,48 @@ export default function Login() {
             <div className="grid w-full items-center gap-4">
               <div className="flex flex-col space-y-1.5">
                 <Label htmlFor="username">Username</Label>
-                <Input id="username" placeholder="Enter your username" />
+                <Input
+                  id="username"
+                  placeholder="Enter your username"
+                  type="username"
+                  onChange={(e) => {
+                    rootStore.user.updateUsername(e.target.value);
+                  }}
+                />
               </div>
               <div className="flex flex-col space-y-1.5">
                 <Label htmlFor="password">Password</Label>
-                <Input id="password" placeholder="Enter your password" />
+                <Input
+                  id="password"
+                  placeholder="Enter your password"
+                  type="password"
+                  onChange={(e) => {
+                    rootStore.user.updatePassword(e.target.value);
+                  }}
+                />
               </div>
             </div>
           </form>
         </CardContent>
         <CardFooter className="flex justify-end">
-          <Button>Deploy</Button>
+          <Button
+            onClick={async () => {
+              const res = await rootStore.user.login(
+                rootStore.user.username,
+                rootStore.user.password
+              );
+              if (res) {
+                rootStore.user.updatePassword("");
+                nevigate("/");
+              }
+            }}
+          >
+            Login
+          </Button>
         </CardFooter>
       </Card>
     </div>
   );
-}
+});
+
+export default Login;
