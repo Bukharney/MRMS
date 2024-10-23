@@ -85,7 +85,6 @@ export const MoviesTable = observer(() => {
               <TableCell className="text-center w-1/12">
                 <ChangeDialog
                   role={rootStore.user.role}
-                  button="Edit"
                   type="edit"
                   title={movie.title}
                   year={movie.year.toString()}
